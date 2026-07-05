@@ -9,10 +9,26 @@ import { fetchFromAPI } from "../utils/api";
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState("New");
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`)
-      .then((data) => setVideos(data.items));
+    const loadVideos = async () => {
+      setLoading(true);
+
+      const data = await fetchFromAPI(
+        `search?part=snippet&q=${selectedCategory}`
+      );
+
+      if (data?.items) {
+        setVideos(data.items);
+      } else {
+        setVideos([]);
+      }
+
+      setLoading(false);
+    };
+
+    loadVideos();
   }, [selectedCategory]);
 
   return (
@@ -25,12 +41,12 @@ function Home() {
           setSelectedCategory={setSelectedCategory}
         />
 
-        <Box p={2} sx={{ flex: 2 }}>
+        <Box sx={{ flex: 1, p: 2 }}>
           <Typography variant="h5" mb={2}>
             {selectedCategory} Videos
           </Typography>
 
-          {!videos.length ? (
+          {loading ? (
             <Loader />
           ) : (
             <Videos videos={videos} />
