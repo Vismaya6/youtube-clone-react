@@ -1,38 +1,33 @@
-import { Box, Button } from "@mui/material";
+import { Stack, Button } from "@mui/material";
+import { categories } from "../utils/constants";
 
-const categories = [
-  "New",
-  "Music",
-  "Gaming",
-  "News",
-  "Sports",
-  "Education",
-  "Movies",
-  "Live",
-];
-
-function Sidebar() {
+function Sidebar({ selectedCategory, setSelectedCategory }) {
   return (
-    <Box
+    <Stack
+      direction="column"
       sx={{
-        width: 220,
+        width: 200,
         p: 2,
-        borderRight: "1px solid #ddd",
       }}
     >
       {categories.map((category) => (
         <Button
-          key={category}
-          fullWidth
+          key={category.name}
+          onClick={() => setSelectedCategory(category.name)}
+          variant={
+            selectedCategory === category.name
+              ? "contained"
+              : "text"
+          }
           sx={{
             justifyContent: "flex-start",
             mb: 1,
           }}
         >
-          {category}
+          {category.name}
         </Button>
       ))}
-    </Box>
+    </Stack>
   );
 }
 
